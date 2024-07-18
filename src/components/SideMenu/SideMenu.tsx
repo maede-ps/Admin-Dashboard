@@ -9,16 +9,16 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Drawer } from "../../../node_modules/@mui/material/index";
-import {useMediaQuery} from "@mui/material";
-import scss from './SideMenu.module.scss'
-import HomeIcon from '@mui/icons-material/Home';
-import Person2Icon from '@mui/icons-material/Person2';
-import SettingsIcon from '@mui/icons-material/Settings';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import EqualizerIcon from '@mui/icons-material/Equalizer';
-import NextLink from 'next/link';
-import {signOut} from 'next-auth/react'
+import Drawer from "@mui/material/Drawer";
+import { useMediaQuery } from "@mui/material";
+import scss from "./SideMenu.module.scss";
+import HomeIcon from "@mui/icons-material/Home";
+import Person2Icon from "@mui/icons-material/Person2";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import EqualizerIcon from "@mui/icons-material/Equalizer";
+import NextLink from "next/link";
+import { signOut } from "next-auth/react";
 
 const drawerWidth = 240;
 
@@ -43,30 +43,37 @@ const closedMixin = (theme: Theme): CSSObject => ({
   },
 });
 
-const menuRouteList = ["","data","profile","settings",""];
-const menuListTranslations = ["Home","Data","Profile" ,"Settings","Sign Out"];
-const menuListIcons =[
-  <HomeIcon/>,
-  <EqualizerIcon/>,
-  <Person2Icon/>,
-  <SettingsIcon/>,
-  <ExitToAppIcon/>
+const menuRouteList = ["", "data", "profile", "settings", ""];
+const menuListTranslations = [
+  "Home",
+  "Data",
+  "Profile",
+  "Settings",
+  "Sign Out",
+];
+const menuListIcons = [
+  <HomeIcon key="home" />,
+  <EqualizerIcon key="data" />,
+  <Person2Icon key="profile" />,
+  <SettingsIcon key="settings" />,
+  <ExitToAppIcon key="signout" />,
 ];
 
 const SideMenu = () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-const mobileCheck = useMediaQuery('(min-width: 600px)');
-
+  const mobileCheck = useMediaQuery("(min-width: 600px)");
 
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
 
-  const handleListItemButtonClick =(text:string)=>{
-text==="Sign Out" ? signOut() : null ;
-   setOpen(false)
-  }
+  const handleListItemButtonClick = (text: string) => {
+    if (text === "Sign Out") {
+      signOut();
+    }
+    setOpen(false);
+  };
 
   return (
     <Drawer
@@ -93,39 +100,46 @@ text==="Sign Out" ? signOut() : null ;
       }}
     >
       <div className={scss.drawerHeader}>
-        <IconButton onClick={handleDrawerToggle}>{theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}</IconButton>
+        <IconButton onClick={handleDrawerToggle}>
+          {theme.direction === "rtl" ? (
+            <ChevronRightIcon />
+          ) : (
+            <ChevronLeftIcon />
+          )}
+        </IconButton>
       </div>
       <Divider />
       <List>
         {menuListTranslations.map((text, index) => (
           <ListItem key={text} disablePadding sx={{ display: "block" }}>
-            <NextLink
-            className={scss.link}
-            href={`/dashboard/${menuRouteList[index]}`}
-            >
-            <ListItemButton
-            onClick={()=>handleListItemButtonClick(text)}
-            title={text}
-            aria-label={text}
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-     
-              <ListItemIcon
+            <NextLink href={`/dashboard/${menuRouteList[index]}`} passHref>
+              <ListItemButton
+                onClick={() => handleListItemButtonClick(text)}
+                title={text}
+                aria-label={text}
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
                 }}
-              >       
-              {menuListIcons[index]}
- </ListItemIcon> 
-              
-              <ListItemText primary={text} sx={{ color:theme.palette.text.primary, opacity: open ? 1 : 0 }} />
-            </ListItemButton>
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {menuListIcons[index]}
+                </ListItemIcon>
+                <ListItemText
+                  primary={text}
+                  sx={{
+                    color: theme.palette.text.primary,
+                    opacity: open ? 1 : 0,
+                  }}
+                />
+              </ListItemButton>
             </NextLink>
           </ListItem>
         ))}
