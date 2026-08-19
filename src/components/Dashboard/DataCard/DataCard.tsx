@@ -10,6 +10,7 @@ export type DataCardProps = {
 };
 
 const DataCard = (props: DataCardProps) => {
+  console.log(props)
   const { title, value, description } = props;
   return (
     <Paper className={scss.dataCard}>
